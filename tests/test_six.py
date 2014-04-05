@@ -3,7 +3,7 @@
 
 import unittest
 import mock
-from six import Connection
+from sixcms.api import Connection
 
 
 class TestCase(unittest.TestCase):
