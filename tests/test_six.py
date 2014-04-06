@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #coding:utf-8
 
+import sys
+sys.path.append('../sixcms')
 import unittest
 import mock
 from sixcms.api import Connection
