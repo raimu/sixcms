@@ -21,13 +21,40 @@ class Connection(object):
     def record_get(self, data, mode='get', return_='all', **kwargs):
         kwargs['mode'] = mode
         kwargs['return'] = return_
-        return self.server.CMSSOAP_RecordGet(user=self.username,
+        data = self.server.CMSSOAP_RecordGet(user=self.username,
                                              passwd=self.password,
                                              data=data,
                                              options=kwargs)
+        return self._to_python(data)
 
     def record_save(self, data, **kwargs):
         return self.server.CMSSOAP_RecordSave(user=self.username,
                                               passwd=self.password,
                                               data=data,
                                               options=kwargs)
+
+    def _to_python(self, data):
+        if hasattr(data, 'item'):
+            record = {}
+            for item in data.item:
+                for i in self._to_python(item):
+                    if isinstance(i, dict):
+                        yield i
+                    else:
+                        record[i.key] = i.value
+            if record:
+                yield record
+        elif hasattr(data, 'value'):
+            if isinstance(data.value, str) or isinstance(data.value, unicode):
+                yield data
+            else:
+                for row in data.value:
+                    new_row = {}
+                    for key, value in row:
+                        if isinstance(value, str) or isinstance(value, unicode):
+                            new_row[key] = value
+                        else:
+                            new_row[key] = [i for i in self._to_python(value)]
+                    yield new_row
+        else:
+            raise SyntaxError()
