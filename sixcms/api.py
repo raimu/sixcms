@@ -58,5 +58,7 @@ class Connection(object):
                     yield new_row
         elif len(data) == 0:
             yield {}
+        elif isinstance(data, str) and data.startswith('id-'):
+            pass
         else:
             raise KeyError("cannot convert structure to python")
