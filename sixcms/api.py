@@ -56,5 +56,7 @@ class Connection(object):
                         else:
                             new_row[key] = [i for i in self._to_python(value)]
                     yield new_row
+        elif len(data) == 0:
+            yield {}
         else:
-            raise SyntaxError()
+            raise KeyError("cannot convert structure to python")
