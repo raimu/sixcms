@@ -39,7 +39,11 @@ class Connection(object):
             for item in data.item:
                 for i in self._to_python(item):
                     if isinstance(i, dict):
-                        yield i
+                        if hasattr(item, 'key') and (
+                                not item.key.startswith('id-')):
+                            record[item.key] = [i]
+                        else:
+                            yield i
                     else:
                         record[i.key] = i.value
             if record:
