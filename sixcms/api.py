@@ -45,6 +45,8 @@ class Connection(object):
                             record[item.key] = [i]
                         else:
                             yield i
+                    elif isinstance(i, list):
+                        record[item.key] = i
                     else:
                         record[i.key] = i.value
             if record:
@@ -52,6 +54,8 @@ class Connection(object):
         elif hasattr(data, 'value'):
             if isinstance(data.value, str) or isinstance(data.value, unicode):
                 yield data
+            elif isinstance(data.value, SOAPpy.typedArrayType):
+                yield [i for i in data.value]
             else:
                 for row in data.value:
                     new_row = {}
