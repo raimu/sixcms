@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #coding:utf-8
 
+import SOAPpy
 from SOAPpy.WSDL import Proxy
 
 
@@ -64,5 +65,8 @@ class Connection(object):
             yield {}
         elif isinstance(data, str) and data.startswith('id-'):
             pass
+        elif isinstance(data, SOAPpy.typedArrayType):
+            for i in data:
+                yield i
         else:
             raise KeyError("cannot convert structure to python")
